@@ -12,10 +12,10 @@ import java.util.Date;
  */
 public class Uccello 
 {
-    private String specie="";
+    private String specie;
     private int eta;
-    private String genere="";
-    private String mutazione="";
+    private String genere;
+    private String mutazione;
     private static int nextId=1;
     private int idUccello;
     private Date dataNascita;
@@ -84,16 +84,73 @@ public class Uccello
     {
         return dataNascita;
     }
-
+    
+    public double prezzo()
+    {
+        double prezzo=0;
+        switch(specie.toLowerCase())
+        {
+            case "calopsitta":
+                switch (mutazione.toLowerCase()) 
+                {
+                    case "faccia bianca":
+                        prezzo += 40;
+                        break;
+                    case "perlata":
+                        prezzo += 30; 
+                        break;
+                    case "cinnamon":
+                        prezzo += 60;
+                        break;
+                    case "lutino":
+                        prezzo += 50;
+                        break;
+                    case "albino":
+                        prezzo += 100;
+                        break;
+                    case "ancestrale":
+                        prezzo += 25;
+                        break;
+                    case default:
+                        System.out.println("Mutazione non conosciuta");
+                }
+                
+            case "cocorita":
+                switch (mutazione.toLowerCase()) 
+                {
+                    case "blu":
+                        prezzo += 10;
+                        break;
+                    case "verde":
+                        prezzo += 5; 
+                        break;
+                    case "giallo":
+                        prezzo += 10;
+                        break;
+                    case "lutino":
+                        prezzo += 15;
+                        break;
+                    case "albino":
+                        prezzo += 25;
+                        break;
+                    case "faccia bianca":
+                        prezzo += 12;
+                        break;
+                    case "grigio":
+                        prezzo += 8;
+                        break;
+                    case default:
+                        System.out.println("Mutazione non conosciuta");
+                }
+                
+        }
+        return prezzo;
+    }
+    
     @Override
     public String toString() 
     {
-        return "Uccello{" + "specie=" + specie + ", età=" + eta + ", genere=" + genere + ", mutazione=" + mutazione + ", idUccello=" + idUccello + ", dataNascita=" + dataNascita + "}";
+        return "Uccello{" + "specie=" + specie + ", età=" + eta + ", genere=" + genere + ", mutazione=" + mutazione + ", idUccello=" + idUccello + ", dataNascita=" + dataNascita + ", prezzo=" + prezzo()+ "}";
     }
 
-    
-
-    
-    
-    
 }

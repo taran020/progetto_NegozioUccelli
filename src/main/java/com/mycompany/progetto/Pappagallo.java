@@ -10,19 +10,19 @@ import java.util.Date;
  *
  * @author Studente
  */
-public class Uccello 
+public class Pappagallo 
 {
     private String specie;
-    private int eta;
+    private double eta;
     private String genere;
     private String mutazione;
     private static int nextId=1;
-    private int idUccello;
+    private int idPappagallo;
     private Date dataNascita;
     
-    public Uccello(String specie, int eta, String genere, String mutazione, Date dataNascita)
+    public Pappagallo(String specie, double eta, String genere, String mutazione, Date dataNascita)
     {
-        idUccello=nextId;
+        idPappagallo=nextId;
         this.specie = specie;
         this.eta = eta;
         this.genere = genere;
@@ -41,7 +41,7 @@ public class Uccello
         this.specie = specie;
     }
 
-    public int getEta() 
+    public double getEta() 
     {
         return eta;
     }
@@ -53,7 +53,7 @@ public class Uccello
 
     public String getGenere() 
     {
-        return genere;
+        return genere.toUpperCase();
     }
 
     public void setGenere(String genere) 
@@ -71,9 +71,9 @@ public class Uccello
         this.mutazione = mutazione;
     }
     
-    public int getIdUccello()
+    public int getIdPappagallo()
     {
-        return idUccello;
+        return idPappagallo;
     }
     
     public void setDataNascita(Date dataNascita) 
@@ -111,9 +111,11 @@ public class Uccello
                     case "ancestrale":
                         prezzo += 25;
                         break;
-                    case default:
+                    default:
                         System.out.println("Mutazione non conosciuta");
+                        break;
                 }
+                break;
                 
             case "cocorita":
                 switch (mutazione.toLowerCase()) 
@@ -139,10 +141,41 @@ public class Uccello
                     case "grigio":
                         prezzo += 8;
                         break;
-                    case default:
+                    default:
                         System.out.println("Mutazione non conosciuta");
+                        break;
                 }
+                break;
                 
+            case "inseparabile":
+                switch (mutazione.toLowerCase())
+                {
+                    case "cremino":
+                        prezzo += 25.0; 
+                        break;
+                    case "avorio cobalto":
+                        prezzo += 15.0; 
+                        break;
+                    case "mascherato":
+                        prezzo += 30.0; 
+                        break;
+                    case "albino":
+                        prezzo += 35.0; 
+                        break;
+                    case "lutino":
+                        prezzo += 40.0; 
+                        break;
+                    case "giallo":
+                        prezzo += 20.0; 
+                        break;
+                    case "arancio":
+                        prezzo += 22.0; 
+                        break;
+                    default:
+                        System.out.println("Mutazione non conosciuta");
+                        break;
+                }
+                break;
         }
         return prezzo;
     }
@@ -150,7 +183,7 @@ public class Uccello
     @Override
     public String toString() 
     {
-        return "Uccello{" + "specie=" + specie + ", età=" + eta + ", genere=" + genere + ", mutazione=" + mutazione + ", idUccello=" + idUccello + ", dataNascita=" + dataNascita + ", prezzo=" + prezzo()+ "}";
+        return getIdPappagallo()+";"+getSpecie()+";"+ getEta()+";"+getGenere()+";"+getMutazione()+";"+getDataNascita()+";"+prezzo()+"€";
     }
 
 }

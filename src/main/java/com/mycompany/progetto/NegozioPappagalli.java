@@ -19,11 +19,17 @@ public class NegozioPappagalli
         pappagalli=new Pappagallo[NUM_MAX_PAPPAGALLI];
     }
     
-    /*public NegozioPappagalli(NegozioPappagalli np)
+     /*
+    public int getNumMaxPappagalli()
+    {
+        return NUM_MAX_PAPPAGALLI;
+    }
+    
+    public NegozioPappagalli(NegozioPappagalli np)
     {
          pappagalli=new Pappagallo[NUM_MAX_PAPPAGALLI];
          Pappagallo p;
-         for(int i=0; i<p.getNumMaxPappagalli();i++)
+         for(int i=0; i<np.getNumMaxPappagalli();i++)
          {
              try 
              {
@@ -67,7 +73,33 @@ public class NegozioPappagalli
          
     }
      
-    
+     public String[] elencoPappagalliSpecie(String specie)
+     {
+        int conteggio = 0;
+        
+        // Conta quanti pappagalli appartengono alla specie specificata
+        for (int i = 0; i < numeroPappagalli; i++) {
+            if (listaPappagalli[i].getSpecie().equals(specie)) {
+                conteggio++;
+            }
+        }
+
+        // Crea un nuovo array per memorizzare i pappagalli della specie specificata
+        Pappagallo[] pappagalliSpecie = new Pappagallo[conteggio];
+        int indice = 0;
+
+        // Aggiunge i pappagalli della specie specificata al nuovo array
+        for (int i = 0; i < numeroPappagalli; i++) {
+            if (listaPappagalli[i].getSpecie().equals(specie)) {
+                pappagalliSpecie[indice] = listaPappagalli[i];
+                indice++;
+            }
+        }
+
+        // Restituisce il nuovo array
+        return pappagalliSpecie;
+    }
+}
     
     public String toString()
     {

@@ -4,6 +4,7 @@
  */
 package com.mycompany.progetto;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -13,14 +14,14 @@ import java.util.Date;
 public class Pappagallo 
 {
     private String specie;
-    private double eta;
+    private int eta;
     private String genere;
     private String mutazione;
     private static int nextId=1;
     private int idPappagallo;
-    private Date dataNascita;
+    private LocalDate dataNascita;
     
-    public Pappagallo(String specie, double eta, String genere, String mutazione, Date dataNascita)
+    public Pappagallo(String specie, int eta, String genere, String mutazione, LocalDate dataNascita)
     {
         idPappagallo=nextId;
         this.specie = specie;
@@ -29,6 +30,7 @@ public class Pappagallo
         this.mutazione = mutazione;
         this.dataNascita=dataNascita;
         nextId++;
+        prezzo();
     }
 
     public String getSpecie() 
@@ -41,7 +43,7 @@ public class Pappagallo
         this.specie = specie;
     }
 
-    public double getEta() 
+    public int getEta() 
     {
         return eta;
     }
@@ -76,11 +78,11 @@ public class Pappagallo
         return idPappagallo;
     }
     
-    public void setDataNascita(Date dataNascita) 
+    public void setDataNascita(LocalDate dataNascita) 
     {
         this.dataNascita = dataNascita;
     }
-    public Date getDataNascita() 
+    public LocalDate getDataNascita() 
     {
         return dataNascita;
     }
@@ -112,7 +114,7 @@ public class Pappagallo
                         prezzo += 25;
                         break;
                     default:
-                        System.out.println("Mutazione non conosciuta");
+                        this.setMutazione("Mutazione non conosciuta");
                         break;
                 }
                 break;
@@ -142,7 +144,7 @@ public class Pappagallo
                         prezzo += 8;
                         break;
                     default:
-                        System.out.println("Mutazione non conosciuta");
+                        this.setMutazione("Mutazione non conosciuta");
                         break;
                 }
                 break;
@@ -172,7 +174,7 @@ public class Pappagallo
                         prezzo += 22.0; 
                         break;
                     default:
-                        System.out.println("Mutazione non conosciuta");
+                        this.setMutazione("Mutazione non conosciuta");
                         break;
                 }
                 break;

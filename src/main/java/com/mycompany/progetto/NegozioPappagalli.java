@@ -4,7 +4,17 @@
  */
 package com.mycompany.progetto;
 import eccezioni.*;
-
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.time.LocalDate;
+import java.util.Date;
+import utilita.TextFile;
 /**
  *
  * @author Studente
@@ -73,34 +83,334 @@ public class NegozioPappagalli
          
     }
      
-     public String[] elencoPappagalliSpecie(String specie)
+     public String elencoPappagalliSpecie(String specie)
      {
-        int conteggio = 0;
-        
-        // Conta quanti pappagalli appartengono alla specie specificata
-        for (int i = 0; i < numeroPappagalli; i++) {
-            if (listaPappagalli[i].getSpecie().equals(specie)) {
-                conteggio++;
+         String s="";
+        for (int i = 0; i < NUM_MAX_PAPPAGALLI; i++) 
+        {
+            try
+            {
+                if (pappagalli[i].getSpecie().equals(specie))
+                    s+="\n" + pappagalli[i];
             }
+            catch (NullPointerException e) 
+            {
+                //Non fare nulla
+            }
+            
         }
 
-        // Crea un nuovo array per memorizzare i pappagalli della specie specificata
-        Pappagallo[] pappagalliSpecie = new Pappagallo[conteggio];
-        int indice = 0;
-
-        // Aggiunge i pappagalli della specie specificata al nuovo array
-        for (int i = 0; i < numeroPappagalli; i++) {
-            if (listaPappagalli[i].getSpecie().equals(specie)) {
-                pappagalliSpecie[indice] = listaPappagalli[i];
-                indice++;
-            }
-        }
-
-        // Restituisce il nuovo array
-        return pappagalliSpecie;
+        return s;
     }
-}
+     
+    public static void scambia(Pappagallo[] p, int i,int j)
+    {
+        Pappagallo x;
+        x=p[i];
+        p[i]=p[j];
+        p[j]=x;
+    }
+     
+    public String OrdinaPrezzoCrescente()
+    {
+        String s="";
+        int lunghezza=pappagalli.length;
+        
+        Pappagallo[] pOrdinato=new Pappagallo[lunghezza];
+        for(int i=0;i<lunghezza;i++)
+            pOrdinato[i]=pappagalli[i];
+        
+        for(int i=0;i<lunghezza-1;i++)
+        {
+            for(int j=i+1;j<lunghezza;j++)
+            {
+                try 
+                {
+                    if (pOrdinato[j].prezzo()<pOrdinato[i].prezzo())
+                        scambia(pOrdinato, i, j);
+                }
+                catch (NullPointerException e)
+                {
+                    
+                }
+                
+            }
+        }
+        
+       for(int i=0;i<lunghezza;i++)
+           if(!(pOrdinato[i]==null))
+               s+="\n"+pOrdinato[i].toString();
+      
+       return s;
+    }
+     
+    public void modifica()
+    {
+        int numeroVociMenu=5;
+        String[] vociMenu=new String[numeroVociMenu];
+        int voceMenuScelta;
+        Menu menu;
+        Scanner tastiera=new Scanner(System.in);
+        
+        int idPappagallo;
+        String nuovaSpecie;
+        int nuovaEta;
+        String nuovoGenere;
+        String nuovaMutazione;
+        
+      //  System.out.println("MODIFICA:\n");
+        vociMenu[0]="0 -->\tEsci";
+        vociMenu[1]="1 -->\tSpecie";
+        vociMenu[2]="2 -->\tEtà";
+        vociMenu[3]="3 -->\tGenere";
+        vociMenu[4]="4 -->\tMutazione";
+        
+        menu=new Menu(vociMenu);
+        
+        do
+        {
+             System.out.println("MODIFICA:\n");
+            voceMenuScelta=menu.sceltaMenu();
+            switch (voceMenuScelta) 
+            {
+                case 0: 
+                    System.out.println("Arrivederci");
+                    break;
+                case 1:
+                    System.out.println("Inserisci Id --> ");
+                    idPappagallo=tastiera.nextInt();
+                    
+                    for (int i = 0; i < NUM_MAX_PAPPAGALLI; i++) 
+                    {
+                        try 
+                        {
+                            if (pappagalli[i].getIdPappagallo()==idPappagallo)
+                            {
+                                tastiera.nextLine();
+                                System.out.println("Inserisci la nuova specie --> ");
+                                nuovaSpecie=tastiera.nextLine();
+
+                                pappagalli[i].setSpecie(nuovaSpecie);
+                            }
+                        } 
+                        catch (NullPointerException e)
+                        {
+                            //Non fare nulla
+                        }
+                    }
+                    break;
+                case 2:
+                    System.out.println("Inserisci Id --> ");
+                    idPappagallo=tastiera.nextInt();
+                    
+                    for (int i = 0; i < NUM_MAX_PAPPAGALLI; i++) 
+                    {
+                        try 
+                        {
+                            if (pappagalli[i].getIdPappagallo()==idPappagallo)
+                            {
+                                tastiera.nextLine();
+                                System.out.println("Inserisci la nuova età --> ");
+                                nuovaEta=tastiera.nextInt();
+
+                                pappagalli[i].setEta(nuovaEta);
+                            }
+                        } 
+                        catch (NullPointerException e)
+                        {
+                            //Non fare nulla
+                        }
+                    }
+                    break;
+                case 3:
+                    System.out.println("Inserisci Id --> ");
+                    idPappagallo=tastiera.nextInt();
+                    
+                    for (int i = 0; i < NUM_MAX_PAPPAGALLI; i++) 
+                    {
+                        try 
+                        {
+                            if (pappagalli[i].getIdPappagallo()==idPappagallo)
+                            {
+                                tastiera.nextLine();
+                                System.out.println("Inserisci il nuovo genere --> ");
+                                nuovoGenere=tastiera.nextLine();
+
+                                pappagalli[i].setGenere(nuovoGenere);
+                            }
+                        } 
+                        catch (NullPointerException e)
+                        {
+                            //Non fare nulla
+                        }
+                    }
+                    break;
+                case 4:
+                    System.out.println("Inserisci Id --> ");
+                    idPappagallo=tastiera.nextInt();
+                    
+                    for (int i = 0; i < NUM_MAX_PAPPAGALLI; i++) 
+                    {
+                        try 
+                        {
+                            if (pappagalli[i].getIdPappagallo()==idPappagallo)
+                            {
+                                tastiera.nextLine();
+                                System.out.println("Inserisci la nuova mutazione --> ");
+                                nuovaMutazione=tastiera.nextLine();
+
+                                pappagalli[i].setMutazione(nuovaMutazione);
+                                pappagalli[i].prezzo();
+                            }
+                        } 
+                        catch (NullPointerException e)
+                        {
+                            //Non fare nulla
+                        }
+                    }
+                    break;
+            
+            }
+        }while(voceMenuScelta!=0);
+    }
+
+    public void esportaFileCSV()
+    {
+        String nomeFileCSV = "pappagalli.csv";
+        try (FileWriter writer = new FileWriter(nomeFileCSV)) 
+        {
+            // Scrivere l'intestazione del file CSV
+            writer.write("Id;Specie;Età;Genere;Mutazione;DataNascita;Prezzo\n");
+
+            // Scorrere l'array dei pappagalli e scrivere ciascun pappagallo nel file CSV
+            for (int i=0;i<pappagalli.length;i++) 
+            {
+                if (pappagalli[i] != null) 
+                {
+                    writer.write(pappagalli[i].getIdPappagallo() + ";" +
+                                 pappagalli[i].getSpecie() + ";" +
+                                 pappagalli[i].getEta() + ";" +
+                                 pappagalli[i].getGenere() + ";" +
+                                 pappagalli[i].getMutazione() + ";" +
+                                 pappagalli[i].getDataNascita() + ";" +
+                                 pappagalli[i].prezzo() + "€\n");
+                }
+            }
+            System.out.println("Esportazione completata con successo.");
+        } 
+        catch (IOException e)
+        {
+            System.out.println("Errore durante l'esportazione dei dati: " + e.getMessage());
+        }
+    }
     
+    public void importaFileCSV()
+    {
+        String rigaLetta;
+        String[] datiVolume;
+        try 
+        {   
+            //Importa da file CSV
+            String nomeFileCSV="pappagalli.csv";
+            TextFile f1 = new TextFile(nomeFileCSV,'R');
+            String specie;
+            int eta;
+            String genere;
+            String mutazione;
+            int idPappagallo;
+            LocalDate dataNascita;
+            double prezzo;
+            int posizione;
+            do
+            {
+                try
+                {
+                    rigaLetta=f1.fromFile();
+                    datiVolume=rigaLetta.split(";");
+                    posizione=Integer.parseInt(datiVolume[0]);
+                    idPappagallo=Integer.parseInt(datiVolume[1]);
+                    specie=datiVolume[2];
+                    eta=Integer.parseInt(datiVolume[3]);
+                    genere=datiVolume[4];
+                    mutazione=datiVolume[5];
+                    dataNascita=LocalDate.parse(datiVolume[5]);
+                    prezzo=Integer.parseInt(datiVolume[6]);
+                            
+                    Pappagallo p = new Pappagallo(specie, eta, genere, mutazione,dataNascita);
+                    try 
+                    {
+                        aggiungiPappagallo(p, posizione);
+                    }
+                    catch (EccezionePosizioneNonValida ex) 
+                    {
+                         System.out.println("Errore: posizione "+posizione+ " non corretta!");
+                    }
+                    catch (EccezionePosizioneOccupata ex) 
+                    {
+                         System.out.println("Posizione "+posizione+" è occupata");
+                    }
+                }
+                catch (FileException ex) 
+                {
+                    //fine del file
+                    f1.closeFile();
+                    System.out.println("Fine operazione di caricamento");
+                    break;
+                }
+            }while(true);                
+        } 
+        catch (IOException ex) 
+        {
+            System.out.println("Impossibile accedere al file!");
+        } 
+    }
+
+      public void serializzazione(NegozioPappagalli np)
+    {
+        try 
+        {
+            String nomeFileBinario="NegozioPappagalli.bin";
+            ObjectOutputStream writer=new ObjectOutputStream(new FileOutputStream(nomeFileBinario));
+            writer.writeObject(np);
+            writer.flush();
+            writer.close();
+            System.out.println("Salvataggio avvenuto correttamente");
+        } 
+        catch (FileNotFoundException ex) 
+        {
+            System.out.println("File non trovato");
+        } 
+        catch (IOException ex) 
+        {
+             System.out.println("Impossibile accedere al file");
+        }
+    }
+      
+       public void deserializzazione(NegozioPappagalli np)
+    {
+        String nomeFileBinario="NegozioPappagalli.bin";
+        try 
+        {
+            ObjectInputStream reader=new ObjectInputStream(new FileInputStream(nomeFileBinario));
+            np=(NegozioPappagalli)reader.readObject();
+            reader.close();
+            System.out.println("Caricamento effettuato correttamente");
+        } 
+        catch (FileNotFoundException ex) 
+        {
+            System.out.println("File non trovato");
+        } 
+        catch (IOException ex) 
+        {
+             System.out.println("Impossibile accedere al file");
+        } 
+        catch (ClassNotFoundException ex) 
+        {
+            System.out.println("Impossibile leggere il dato memorizzato");
+        }
+    }
+    
+      
     public String toString()
     {
         String s="";
@@ -115,6 +425,5 @@ public class NegozioPappagalli
         return s;
     }
     
-
-    
 }
+

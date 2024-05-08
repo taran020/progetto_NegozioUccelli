@@ -29,39 +29,6 @@ public class NegozioPappagalli
         pappagalli=new Pappagallo[NUM_MAX_PAPPAGALLI];
     }
     
-     /*
-    public int getNumMaxPappagalli()
-    {
-        return NUM_MAX_PAPPAGALLI;
-    }
-    
-    public NegozioPappagalli(NegozioPappagalli np)
-    {
-         pappagalli=new Pappagallo[NUM_MAX_PAPPAGALLI];
-         Pappagallo p;
-         for(int i=0; i<np.getNumMaxPappagalli();i++)
-         {
-             try 
-             {
-                 p=np.getVolume(i);
-                 if (lib!=null)        
-                     this.setVolume(lib, i);
-             } 
-             catch (EccezionePosizioneNonValida ex) 
-             {
-                 //non succederà mai
-             } 
-             catch (EccezionePosizioneVuota ex) 
-             {
-                 //non fare nulla
-             } 
-             catch (EccezionePosizioneOccupata ex) 
-             {
-                 //non succederà mai.
-             }
-         }
-    }*/
-    
     public void aggiungiPappagallo(Pappagallo p, int posizione) throws EccezionePosizioneNonValida, EccezionePosizioneOccupata
     {
         if (posizione<0 || posizione>=NUM_MAX_PAPPAGALLI)

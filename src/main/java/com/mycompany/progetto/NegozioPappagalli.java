@@ -12,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 import utilita.TextFile;
@@ -19,7 +20,7 @@ import utilita.TextFile;
  *
  * @author Studente
  */
-public class NegozioPappagalli
+public class NegozioPappagalli implements Serializable
 {
     private final static int NUM_MAX_PAPPAGALLI=10;
     private Pappagallo[] pappagalli;
@@ -49,6 +50,24 @@ public class NegozioPappagalli
         pappagalli[posizione]=null;
          
     }
+
+
+    public Pappagallo getPappagallo(int posizione) throws EccezionePosizioneNonValida, EccezionePosizioneVuota
+    {
+        
+        if (posizione < 0 || posizione >= NUM_MAX_PAPPAGALLI) 
+        {
+            throw new EccezionePosizioneNonValida();
+        }
+
+        if (pappagalli[posizione] == null) 
+        {
+            throw new EccezionePosizioneVuota();
+        }
+
+        return pappagalli[posizione];
+    }
+
      
      public String elencoPappagalliSpecie(String specie)
      {
@@ -244,32 +263,35 @@ public class NegozioPappagalli
     public void esportaFileCSV()
     {
         String nomeFileCSV = "pappagalli.csv";
-        try (FileWriter writer = new FileWriter(nomeFileCSV)) 
+        try
         {
-            // Scrivere l'intestazione del file CSV
-            writer.write("Id;Specie;Età;Genere;Mutazione;DataNascita;Prezzo\n");
+            TextFile f1 = new TextFile(nomeFileCSV, 'W');
 
-            // Scorrere l'array dei pappagalli e scrivere ciascun pappagallo nel file CSV
-            for (int i=0;i<pappagalli.length;i++) 
+            for (int i = 0; i < NUM_MAX_PAPPAGALLI; i++)
             {
-                if (pappagalli[i] != null) 
+                try 
                 {
-                    writer.write(pappagalli[i].getIdPappagallo() + ";" +
-                                 pappagalli[i].getSpecie() + ";" +
-                                 pappagalli[i].getEta() + ";" +
-                                 pappagalli[i].getGenere() + ";" +
-                                 pappagalli[i].getMutazione() + ";" +
-                                 pappagalli[i].getDataNascita() + ";" +
-                                 pappagalli[i].prezzo() + "€\n");
+                    Pappagallo p = getPappagallo(i);
+                    String datiVolume = i + ";" + p.getIdPappagallo() + ";" + p.getSpecie() + ";" + p.getEta() + ";" + p.getGenere() + ";" + p.getMutazione() + ";" + p.getDataNascita() + ";" + p.prezzo();
+                    f1.toFile(datiVolume);
+                } catch (EccezionePosizioneNonValida ex) {
+                    // Non dovrebbe succedere
+                } catch (EccezionePosizioneVuota ex) {
+                    // Salta questa posizione vuota
+                } catch (FileException ex) {
+                    System.out.println("Errore nella scrittura su file: " + ex.getMessage());
                 }
             }
+             f1.closeFile(); 
             System.out.println("Esportazione completata con successo.");
         } 
-        catch (IOException e)
+        catch (IOException e) 
         {
             System.out.println("Errore durante l'esportazione dei dati: " + e.getMessage());
         }
+        
     }
+
     
     public void importaFileCSV()
     {
@@ -288,6 +310,7 @@ public class NegozioPappagalli
             LocalDate dataNascita;
             double prezzo;
             int posizione;
+            
             do
             {
                 try
@@ -300,8 +323,8 @@ public class NegozioPappagalli
                     eta=Integer.parseInt(datiVolume[3]);
                     genere=datiVolume[4];
                     mutazione=datiVolume[5];
-                    dataNascita=LocalDate.parse(datiVolume[5]);
-                    prezzo=Integer.parseInt(datiVolume[6]);
+                    dataNascita=LocalDate.parse(datiVolume[6]);
+                    prezzo=Double.parseDouble(datiVolume[7]);
                             
                     Pappagallo p = new Pappagallo(specie, eta, genere, mutazione,dataNascita);
                     try 
@@ -332,7 +355,7 @@ public class NegozioPappagalli
         } 
     }
 
-      public void serializzazione(NegozioPappagalli np)
+    public void serializzazione(NegozioPappagalli np)
     {
         try 
         {

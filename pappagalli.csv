@@ -1,4 +1,3 @@
-Id;Specie;Età;Genere;Mutazione;DataNascita;Prezzo
-1;calopsitta;1;M;albino;2020-09-20;100.0€
-2;cocorita;4;F;blu;2020-09-20;10.0€
-3;inseparabile;5;M;cremino;2020-09-20;25.0€
+0;1;calopsitta;1;M;albino;2020-09-20;100.0
+1;2;cocorita;4;F;blu;2020-09-20;10.0
+2;3;inseparabile;5;M;cremino;2020-09-20;25.0

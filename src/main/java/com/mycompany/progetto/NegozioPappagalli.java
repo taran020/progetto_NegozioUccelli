@@ -15,6 +15,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
+import utilita.Menu;
 import utilita.TextFile;
 /**
  *
@@ -22,14 +23,36 @@ import utilita.TextFile;
  */
 public class NegozioPappagalli implements Serializable
 {
-    private final static int NUM_MAX_PAPPAGALLI=10;
+    private final static int NUM_MAX_PAPPAGALLI=11;
     private Pappagallo[] pappagalli;
     
+    /**
+    * Costruttore della classe NegozioPappagalli che inizializza l'array di Pappagalli
+    * con la dimensione massima specificata dalla costante NUM_MAX_PAPPAGALLI.
+    */
     public NegozioPappagalli()
     {
         pappagalli=new Pappagallo[NUM_MAX_PAPPAGALLI];
     }
     
+    /**
+    * Restituisce il numero massimo di pappagalli che il negozio può contenere.
+    *
+    * @return Il numero massimo di pappagalli che il negozio può contenere.
+    */
+    public int getNumMaxPappagalli()
+    {
+        return NUM_MAX_PAPPAGALLI;
+    }
+    
+    /**
+    * Aggiunge un pappagallo nella posizione specificata all'interno del negozio.
+    *
+    * @param p Il pappagallo da aggiungere.
+    * @param posizione La posizione in cui aggiungere il pappagallo.
+    * @throws EccezionePosizioneNonValida Se la posizione specificata non è valida.
+    * @throws EccezionePosizioneOccupata Se la posizione specificata è già occupata da un altro pappagallo.
+    */
     public void aggiungiPappagallo(Pappagallo p, int posizione) throws EccezionePosizioneNonValida, EccezionePosizioneOccupata
     {
         if (posizione<0 || posizione>=NUM_MAX_PAPPAGALLI)
@@ -40,6 +63,13 @@ public class NegozioPappagalli implements Serializable
         
     }
     
+    /**
+    * Rimuove il pappagallo dalla posizione specificata all'interno del negozio.
+    *
+    * @param posizione La posizione da cui rimuovere il pappagallo.
+    * @throws EccezionePosizioneNonValida Se la posizione specificata non è valida.
+    * @throws EccezionePosizioneVuota Se la posizione specificata è vuota.
+    */
     public void rimuoviPappagallo(int posizione) throws EccezionePosizioneNonValida, EccezionePosizioneVuota
     {
         if(posizione<0 || posizione>NUM_MAX_PAPPAGALLI)
@@ -51,7 +81,14 @@ public class NegozioPappagalli implements Serializable
          
     }
 
-
+    /**
+     * Restituisce il pappagallo nella posizione specificata all'interno del negozio.
+     *
+     * @param posizione La posizione del pappagallo da restituire.
+     * @return Il pappagallo nella posizione specificata.
+     * @throws EccezionePosizioneNonValida Se la posizione specificata non è valida.
+     * @throws EccezionePosizioneVuota Se la posizione specificata è vuota.
+     */
     public Pappagallo getPappagallo(int posizione) throws EccezionePosizioneNonValida, EccezionePosizioneVuota
     {
         
@@ -67,28 +104,74 @@ public class NegozioPappagalli implements Serializable
 
         return pappagalli[posizione];
     }
-
-     
-     public String elencoPappagalliSpecie(String specie)
-     {
-         String s="";
-        for (int i = 0; i < NUM_MAX_PAPPAGALLI; i++) 
+    
+    /**
+    * Restituisce un array di pappagalli che corrispondono alla specie specificata.
+    *
+    * @param specie La specie dei pappagalli da cercare.
+    * @return Un array di pappagalli che corrispondono alla specie specificata.
+    */
+    public Pappagallo[] elencoPappagalliSpecie(String specie)
+    {
+        int c=0;
+        Pappagallo p;
+        Pappagallo[] elencoPappagalliSpecie;
+        
+        for(int i=0;i<NUM_MAX_PAPPAGALLI;i++)
         {
-            try
+            try 
             {
-                if (pappagalli[i].getSpecie().equals(specie))
-                    s+="\n" + pappagalli[i];
+                p=this.getPappagallo(i);
+                if (p.getSpecie().equalsIgnoreCase(specie))
+                    c++;   
             }
-            catch (NullPointerException e) 
+            catch (EccezionePosizioneNonValida ex)
             {
-                //Non fare nulla
+                //non succederà mai
             }
-            
+            catch (EccezionePosizioneVuota ex) 
+            {
+                    //non fare nulla.
+            }
         }
-
-        return s;
+        
+        if (c==0)
+            return null; //non ci sono pappagalli di quella specie.
+        
+        elencoPappagalliSpecie=new Pappagallo[c];
+        
+        c=0; //azzero il contatore per usarlo come contatore dell'array
+        
+        for(int i=0;i<NUM_MAX_PAPPAGALLI;i++)
+        {
+            try 
+                {
+                    p=this.getPappagallo(i);
+                    if (p.getSpecie().equalsIgnoreCase(specie))
+                    {
+                        elencoPappagalliSpecie[c]=p;
+                        c++;
+                    } 
+                }
+                catch (EccezionePosizioneNonValida ex) 
+                {
+                       //non succederà mai
+                } 
+                catch (EccezionePosizioneVuota ex) 
+                {
+                    //non fare nulla
+                }
+        }
+        return elencoPappagalliSpecie;
     }
      
+    /**
+    * Scambia due elementi in un array di pappagalli.
+    *
+    * @param p L'array di pappagalli in cui scambiare gli elementi.
+    * @param i L'indice del primo elemento.
+    * @param j L'indice del secondo elemento.
+    */
     public static void scambia(Pappagallo[] p, int i,int j)
     {
         Pappagallo x;
@@ -97,39 +180,39 @@ public class NegozioPappagalli implements Serializable
         p[j]=x;
     }
      
-    public String OrdinaPrezzoCrescente()
+    /**
+    * Ordina gli elementi di un array di pappagalli per prezzo crescente.
+    *
+    * @return Un array di pappagalli ordinato per prezzo crescente.
+    */
+    public Pappagallo[] ordinaPrezzoCrescente() 
     {
-        String s="";
-        int lunghezza=pappagalli.length;
+        int lunghezza = pappagalli.length;
+        Pappagallo[] pOrdinato = new Pappagallo[lunghezza];
         
-        Pappagallo[] pOrdinato=new Pappagallo[lunghezza];
-        for(int i=0;i<lunghezza;i++)
-            pOrdinato[i]=pappagalli[i];
-        
-        for(int i=0;i<lunghezza-1;i++)
+        for (int i = 0; i < lunghezza; i++)
         {
-            for(int j=i+1;j<lunghezza;j++)
+            if(pappagalli[i]!=null)
+                pOrdinato[i] = pappagalli[i];
+        }
+
+        for (int i = 0; i < lunghezza - 1; i++)
+        {
+            for (int j = i + 1; j < lunghezza; j++)
             {
-                try 
-                {
-                    if (pOrdinato[j].prezzo()<pOrdinato[i].prezzo())
-                        scambia(pOrdinato, i, j);
-                }
-                catch (NullPointerException e)
-                {
-                    
-                }
-                
+                // Se il prezzo di pOrdinato[j] è inferiore a quello di pOrdinato[i], li scambio
+                if (pOrdinato[j] != null && pOrdinato[i] != null && pOrdinato[j].prezzo() < pOrdinato[i].prezzo())
+                    scambia(pOrdinato, i, j);
             }
         }
-        
-       for(int i=0;i<lunghezza;i++)
-           if(!(pOrdinato[i]==null))
-               s+="\n"+pOrdinato[i].toString();
-      
-       return s;
+
+        return pOrdinato;
     }
-     
+
+    /**
+    * Consente al proprietario del negozio di modificare i dati di un pappagallo.
+    * Il metodo presenta un menu che permette di selezionare quale attributo del pappagallo modificare.
+    */
     public void modifica()
     {
         int numeroVociMenu=5;
@@ -144,7 +227,6 @@ public class NegozioPappagalli implements Serializable
         String nuovoGenere;
         String nuovaMutazione;
         
-      //  System.out.println("MODIFICA:\n");
         vociMenu[0]="0 -->\tEsci";
         vociMenu[1]="1 -->\tSpecie";
         vociMenu[2]="2 -->\tEtà";
@@ -159,8 +241,7 @@ public class NegozioPappagalli implements Serializable
             voceMenuScelta=menu.sceltaMenu();
             switch (voceMenuScelta) 
             {
-                case 0: 
-                    System.out.println("Arrivederci");
+                case 0:
                     break;
                 case 1:
                     System.out.println("Inserisci Id --> ");
@@ -260,6 +341,9 @@ public class NegozioPappagalli implements Serializable
         }while(voceMenuScelta!=0);
     }
 
+    /**
+    * Esporta i dati dei pappagalli in un file CSV.
+    */
     public void esportaFileCSV()
     {
         String nomeFileCSV = "pappagalli.csv";
@@ -291,8 +375,10 @@ public class NegozioPappagalli implements Serializable
         }
         
     }
-
     
+    /**
+    * Importa i dati dei pappagalli da un file CSV.
+    */
     public void importaFileCSV()
     {
         String rigaLetta;
@@ -355,6 +441,9 @@ public class NegozioPappagalli implements Serializable
         } 
     }
 
+    /**
+    * Serializza l'oggetto NegozioPappagalli e lo salva su un file binario.
+    */
     public void serializzazione(NegozioPappagalli np)
     {
         try 
@@ -376,7 +465,10 @@ public class NegozioPappagalli implements Serializable
         }
     }
       
-       public void deserializzazione(NegozioPappagalli np)
+    /**
+    * Deserializza l'oggetto NegozioPappagalli da un file binario.
+    */
+    public void deserializzazione(NegozioPappagalli np)
     {
         String nomeFileBinario="NegozioPappagalli.bin";
         try 
@@ -399,8 +491,12 @@ public class NegozioPappagalli implements Serializable
             System.out.println("Impossibile leggere il dato memorizzato");
         }
     }
-    
-      
+     
+    /**
+    * Restituisce una stringa rappresentante lo stato dell'oggetto NegozioPappagalli.
+    *
+    * @return Una stringa rappresentante lo stato dell'oggetto.
+    */
     public String toString()
     {
         String s="";

@@ -14,6 +14,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import utilita.Menu;
 
 /**
  *
@@ -24,40 +25,8 @@ public class App
 
     public static void main(String[] args) 
     {
-        LocalDate d1=LocalDate.of(2020,9,20);
-        Pappagallo p1=new Pappagallo("calopsitta", 1, "m", "albino", d1);
-                
-        LocalDate d2=LocalDate.of(2020,9,20);
-        Pappagallo p2=new Pappagallo("cocorita", 4, "f", "blu", d2);
-                
-        LocalDate d3=LocalDate.of(2020,9,20);
-        Pappagallo p3=new Pappagallo("inseparabile", 5, "m", "cremino", d3);
-                
-       NegozioPappagalli np1=new NegozioPappagalli();
-       
-        try 
-        {
-            np1.aggiungiPappagallo(p1, 0);
-            np1.aggiungiPappagallo(p2, 1);
-            np1.aggiungiPappagallo(p3, 2);
-        } catch (EccezionePosizioneNonValida ex) 
-        {
             
-        } catch (EccezionePosizioneOccupata ex)
-        {
-            
-        }
-         
-        //System.out.println(np1.toString());
-     //  np1.esportaFileCSV();
-       //np1.importaFileCSV();
-      
-        np1.serializzazione(np1);
-        
-        //np1.deserializzazione(np1);
-         //System.out.println(np1.toString());
-            
-       /* int numeroVociMenu=11;
+        int numeroVociMenu=12;
         String[] vociMenu=new String[numeroVociMenu];
         int voceMenuScelta;
         Menu menu;
@@ -68,12 +37,14 @@ public class App
         vociMenu[2]="2 -->\tAggiungi pappagallo";
         vociMenu[3]="3 -->\tCerca pappagallo";
         vociMenu[4]="4 -->\tElimina pappagallo";
-        vociMenu[5]="5 -->\tMostra pappagalli di una specifica specie";
-        vociMenu[6]="6 -->\tMostra pappagalli presenti ordinati per prezzo crescente";
+        vociMenu[5]="5 -->\tVisualizza pappagalli di una specifica specie";
+        vociMenu[6]="6 -->\tVisualizza pappagalli presenti ordinati per prezzo crescente";
         vociMenu[7]="7 -->\tEsporta pappagalli in formato CSV";
         vociMenu[8]="8 -->\tImporta pappagalli dal file CSV";
         vociMenu[9]="9 -->\tSalva dati pappagallo";
         vociMenu[10]="10 -->\tCarica dati pappagallo";
+        vociMenu[11]="11 -->\tModifica dati pappagallo";
+
         menu=new Menu(vociMenu);
 
         String specie,mutazione,genere;
@@ -82,19 +53,24 @@ public class App
         int posizione;
         LocalDate dataNascita = null;
         Pappagallo p = null;
+        Pappagallo[] elencoPappagalliSpecie;
+        Pappagallo[] pOrdinato;
+        NegozioPappagalli np1=new NegozioPappagalli();
+
 
         do
         {
             voceMenuScelta=menu.sceltaMenu();
             switch (voceMenuScelta) 
             {
-                case 0: //Esci
+                case 0: 
                     System.out.println("Arrivederci");
                     break;
-                case 1://Visualizza tutti
+                case 1:
                     System.out.println(np1.toString());
                     break;
                 case 2:
+                    tastiera.nextLine();
                     System.out.println("Specie --> ");
                     specie=tastiera.nextLine();
                     System.out.println("Età --> ");
@@ -143,6 +119,7 @@ public class App
                     try
                     {
                         p=new Pappagallo(specie,eta,genere,mutazione,dataNascita);
+                        p.setEta(eta);
                         np1.aggiungiPappagallo(p, posizione);
                         System.out.println("Pappagallo inserito correttamente.");
                     }
@@ -156,50 +133,119 @@ public class App
                     }
                     break;
                 case 3:
-                        System.out.println("Posizione --> ");
-                        posizione=tastiera.nextInt();
+                    System.out.println("Posizione --> ");
+                    posizione=tastiera.nextInt();
 
+                    try 
+                    {
+                        p=np1.getPappagallo(posizione);
+                        System.out.println("Pappagallo cercato:\n"+p.toString());
+                    } 
+                    catch (EccezionePosizioneNonValida ex) 
+                    {
+                        System.out.println("Posizione non valida!");
+                    } 
+                    catch (EccezionePosizioneVuota ex) 
+                    {
+                        System.out.println("Posizione vuota!");
+                    }
+
+                    break;
+                case 4:
+                    System.out.println("Posizione --> ");
+                    posizione=tastiera.nextInt();
+                    try
+                    {
+                        np1.rimuoviPappagallo(posizione);
+                        System.out.println("Il pappagallo è stato rimosso correttamente");
+                    }
+                    catch (EccezionePosizioneNonValida ex) 
+                    {
+                        System.out.println("Posizione non valida");
+                    } 
+                    catch (EccezionePosizioneVuota ex) 
+                    {
+                        System.out.println("La posizione è già vuota. Nessun pappagallo è stato rimosso");
+                    }
+
+                    
+                    break;
+                case 5:
+                    System.out.println("Specie --> ");
+                    specie=tastiera.nextLine();
+                    elencoPappagalliSpecie=np1.elencoPappagalliSpecie(specie);
+                    if (elencoPappagalliSpecie!=null)
+                    {
+                        for(int i=0;i<elencoPappagalliSpecie.length;i++)
+                        {
+                            System.out.println(elencoPappagalliSpecie[i]);
+                        }
+                    }
+                    else
+                        System.out.println("Nessun pappagallo presente per la specie scelta.");
+                    break;
+                case 6:
+                    pOrdinato=np1.ordinaPrezzoCrescente();
+
+                    int x=0;
+                    for(int i=0;i<pOrdinato.length;i++)
+                    {
+                        if(pOrdinato[i]!=null)
+                        {
+                            System.out.println(pOrdinato[i]);
+                            x++;
+                        }
+                    }
+                    
+                    if(x==0)
+                        System.out.println("Il negozio è vuoto");
+                    
+                    break;
+                case 7:
+                    np1.esportaFileCSV();
+                    break;
+                case 8: 
+                    np1.importaFileCSV();
+                    break;
+                case 9:               
+                    np1.serializzazione(np1);
+                    break;
+                case 10:
+                    np1.deserializzazione(np1);
+                    break;
+                case 11:
+                    boolean negozioVuoto = true;
+                    int i=0;
+                    while (i < np1.getNumMaxPappagalli()) 
+                    {
                         try 
                         {
-                            p=np1.getPappagallo(posizione);
-                            System.out.println("Pappagallo cercato:\n"+p.toString());
-                        } 
-                        catch (EccezionePosizioneNonValida ex) 
-                        {
-                            System.out.println("Posizione non valida!");
-                        } 
-                        catch (EccezionePosizioneVuota ex) 
-                        {
-                            System.out.println("Posizione vuota!");
-                        }
-                        
-                        break;
-                case 4:
-                        do
-                        {
-                            try
+                            if (np1.getPappagallo(i) != null)
                             {
-                                System.out.println("Posizione --> ");
-                                posizione=tastiera.nextInt();
+                                negozioVuoto = false;
                                 break;
                             }
-                            catch (EccezionePosizioneNonValida ex) 
-                            {
-                                System.out.println("Posizione non valida");
-                            } 
-                            
-                        }while(true);
-        
-                        s1.rimuoviLibro(ripiano, posizione);
-                        System.out.println("Il libro è stato rimosso correttamente");
-        
-                }break;
-            
-        }while(voceMenuScelta!=0);*/
+                        }
+                        catch (EccezionePosizioneNonValida ex) 
+                        {
+                            System.out.println("Posizione non valida");
+                        }
+                        catch (EccezionePosizioneVuota ex) 
+                        {
+                            i++;
+                        }
+                    }
 
-        
-        
-        
+                    if (negozioVuoto)
+                        System.out.println("Il negozio è vuoto.");
+                    else
+                        np1.modifica();
+                    break;
+                    
+            }       
+            
+        }while(voceMenuScelta!=0);
+ 
     }
 }
 

@@ -21,6 +21,14 @@ public class Pappagallo
     private int idPappagallo;
     private LocalDate dataNascita;
     
+    /**
+     * Costruttore
+     * @param specie 
+     * @param eta 
+     * @param genere maschio o femmina
+     * @param mutazione colore del pappagallo
+     * @param dataNascita 
+     */
     public Pappagallo(String specie, int eta, String genere, String mutazione, LocalDate dataNascita)
     {
         idPappagallo=nextId;
@@ -32,7 +40,7 @@ public class Pappagallo
         nextId++;
         prezzo();
     }
-
+    
     public String getSpecie() 
     {
         return specie;
@@ -51,6 +59,9 @@ public class Pappagallo
     public void setEta(int eta) 
     {
         this.eta = eta;
+        
+        if(eta<0)
+           this.eta = 0;
     }
 
     public String getGenere() 
@@ -82,11 +93,16 @@ public class Pappagallo
     {
         this.dataNascita = dataNascita;
     }
+    
     public LocalDate getDataNascita() 
     {
         return dataNascita;
     }
     
+    /**
+     * Calcola il prezzo del pappagallo in base alla specie e mutazione
+     * @return 
+     */
     public double prezzo()
     {
         double prezzo=0;
@@ -178,10 +194,41 @@ public class Pappagallo
                         break;
                 }
                 break;
+            default:
+                this.setSpecie("Specie non conosciuta");
+                break;
         }
         return prezzo;
     }
     
+    /**
+     * 
+     * Confronta due pappagalli tra loro
+     * @return 
+     */
+    public boolean equals(Object o)
+    {
+        Pappagallo p=(Pappagallo) o;
+        if(getSpecie().equals(p.getSpecie()) && getEta()==p.getEta() && getGenere().equals(p.getGenere()) && getMutazione().equals(p.getMutazione()) && getDataNascita().equals(p.getDataNascita()))
+            return true;
+        else
+            return false;
+
+    }
+    
+    /**
+     *  Reimposta il valore della variabile statica nextId a 1.
+ *   *  è utilizzato per evitare problemi nei Test
+     */
+    public static void resetNextId() 
+    {
+        nextId = 1;
+    }
+    
+    /**
+     * Restituisce una stringa che contiene i dati di un pappagallo
+     * @return 
+     */
     @Override
     public String toString() 
     {

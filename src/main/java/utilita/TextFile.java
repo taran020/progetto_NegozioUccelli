@@ -51,7 +51,7 @@ public class TextFile
      * @param mode modalità di apertura del file, può asumere i seguenti valori:
      * - W o w per aprire il file in scrittura
      * - qualsiasi altra lettera per aprire il file in lettura
-     * @parm append se vale true il file aperto in scrittura viene aperto 
+     * @param append se vale true il file aperto in scrittura viene aperto 
      * in appende, altrimenti viene aperto non in append.
      * @throws FileNotFoundException viene sollevata se il file da leggere
      * non viene trovato. Se il file aperto in scrittura non viene
